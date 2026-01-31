@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SearchQuery {
+  id        String   @id @default(uuid())
+  degree    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  results   SearchResult[]
+
+  @@index([degree])
+  @@index([createdAt])
+}
+
+model SearchResult {
+  id                     String      @id @default(uuid())
+  searchQueryId          String
+  searchQuery            SearchQuery @relation(fields: [searchQueryId], references: [id])
+
+  // University Info
+  universityName         String
+  country                String
+  ranking                Int
+
+  // PSW Visa Info
+  pswDuration            String
+  pswDetails             String      @db.Text
+
+  // Industry Hubs
+  industryMatch          String      @db.Text
+  majorEmployers         String[]
+
+  // Employability
+  employabilityRank      Int?
+  graduateEmploymentRate String?
+  avgStartingSalary      String?
+
+  // Hidden Costs
+  healthInsurance        String
+  visaFees               String
+  proofOfFunds           String
+
+  // Scholarships
+  fullRideAvailable      Boolean
+  fullRideDetails        String?     @db.Text
+  tuitionWaiverAvailable Boolean
+  tuitionWaiverDetails   String?     @db.Text
+
+  // Accreditation
+  accreditationBodies    String[]
+  accreditationDetails   String?     @db.Text
+
+  // Metadata
+  sourceUrl              String?
+  cachedAt               DateTime    @default(now())
+  expiresAt              DateTime
+
+  @@index([searchQueryId])
+  @@index([universityName])
+  @@index([country])
+}

@@ -1,0 +1,16 @@
+# Render Blueprint for automatic deployment
+services:
+  - type: web
+    name: degree-analyser-api
+    env: node
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: CACHE_TTL_HOURS
+        value: 24
